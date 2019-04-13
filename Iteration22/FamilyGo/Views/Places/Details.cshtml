@@ -1,0 +1,135 @@
+﻿@model FamilyGo.Models.Place
+@Scripts.Render("~/bundles/jquery")
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="about-heading">
+    <h2> Place Detail</h2>
+</div>
+
+<div id="d1"></div>
+
+<div class=" about-heading container">
+    <h5>
+        <a href="@Url.Action("Index","Home")">Home >></a>
+        <a href="@Url.Action("Index","Activities")">Activities >> </a>
+        <a href="@Url.Action("Index","Places",new { i = Model.Activity.Name})">Places >></a>
+        <a href="@Url.Action("Details","Places",new { i = Model.PlaceId})">Place Details</a>
+    </h5>
+</div>
+
+<div class="container about-heading">
+    <p>
+        @Html.DisplayFor(model => model.Name)
+    </p>
+</div>
+
+<div class="about w3-agileits">
+    <div class="container">
+        <div class="col-md-12 about-wthreegrids">
+            <img src="@ViewBag.imUrl" />
+        </div>
+        <div class="col-md-12 about-wthreegrids">
+            <h3 class="w3ltitle">Information</h3>
+            <div class="w3ls-pince">
+                <div class="pince-left">
+                    <h5>01</h5>
+                </div>
+                <div class="pince-right">
+                    <h4>RATING:</h4>
+                    <p>@ViewBag.rating</p>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+            <div class="w3ls-pince agileits-w3layouts">
+                <div class="pince-left">
+                    <h5>02</h5>
+                </div>
+                <div class="pince-right">
+                    <h4>PHONE NUMBER:</h4>
+                    <p>@ViewBag.phoneNumber</p>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+            <div class="w3ls-pince agileits-w3layouts">
+                <div class="pince-left">
+                    <h5>03</h5>
+                </div>
+                <div class="pince-right">
+                    <h4>WEBSITE:</h4>
+                    <p>@ViewBag.website</p>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+            <div class="w3ls-pince agileits-w3layouts">
+                <div class="pince-left">
+                    <h5>04</h5>
+                </div>
+                <div class="pince-right">
+                    <h4>OPEN: </h4>
+                    <p>@ViewBag.openingNow</p>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+            <div class="w3ls-pince agileits-w3layouts">
+                <div class="pince-left">
+                    <h5>05</h5>
+                </div>
+                <div class="pince-right">
+                    <h4>WEEKDAY: </h4>
+                    <p>@ViewBag.weekday</p>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+            <div class="w3ls-pince agileits-w3layouts">
+                <div class="pince-left">
+                    <h5>06</h5>
+                </div>
+                <div class="pince-right">
+                    <h4>ADDRESS: </h4>
+                    <p>@ViewBag.address</p>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+            <div class="w3ls-pince agileits-w3layouts">
+                <div class="pince-left">
+                    <h5>07</h5>
+                </div>
+                <div class="pince-right">
+                    <h4>REVIEWS: </h4>
+                    <p>
+                        @if (ViewBag.review.ToString() != "No review avaliable.")
+                        {
+                            foreach (var item in ViewBag.review)
+                            {
+                                @item.author_name<br />
+                                @item.relative_time_description<br />
+                                @item.text<br />
+                                <br />
+                            }
+                        }
+                        else
+                        {
+                            ViewBag.review.ToString();
+                            <br />
+                        }
+                    </p>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+        </div>
+        <div class="clearfix"> </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+

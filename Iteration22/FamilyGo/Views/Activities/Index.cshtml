@@ -1,0 +1,94 @@
+﻿@model IEnumerable<FamilyGo.Models.Activity>
+
+@{
+
+    ViewBag.Title = "Activities";
+}
+
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+
+    <link href="~/Content/lightbox.css" rel="stylesheet" />
+    <link href="~/Content/font-awesome.css" rel="stylesheet" />
+</head>
+<body>
+    <section>
+        <div class="about-heading">
+            <h2>
+                Activities for Children
+            </h2>
+        </div>
+    </section>
+    <div class="container about-heading">
+        <h5>
+            <a href="@Url.Action("Index","Home")">Home >> &nbsp;</a>
+            <a href="@Url.Action("Index","Activities")">Activities</a>
+        </h5>
+    </div>
+    <section>
+        <div class="about-heading container">
+
+            <ul id="myTab" class="nav nav-tabs" role="tabpanel">
+                <li role="presentation" class="active"><a href="@Url.Action("Index","Activities")" role="tab">All</a></li>
+                <li role="presentation"><a href="@Url.Action("Information","Activities")" role="tab">3-6 years old</a> </li>
+                <li role="presentation"><a href="@Url.Action("InformationTwo","Activities")" role="tab">6-12 years old</a></li>
+            </ul>
+
+            <!--
+            <h5>
+                <input id="Checkbox1" type="checkbox" value="three" /> 3-6 years old
+                    &nbsp;&nbsp;&nbsp;
+                <input id="Checkbox2" type="checkbox" value="six" /> 6-12 years old
+            </h5>
+            -->
+        </div>
+    </section>
+
+
+
+    <section>
+        <div class="about-heading container">
+            <h4>Activities for all age group:</h4>
+        </div>
+        <div class="gallery">
+            <div class="container">
+                <div class="gallery-grids">
+                    <div class="col-md-4 gallery-grid">
+                        <div class="grid">
+                            <figure class="effect-roxy">
+                                <a class="image-link" href="@Url.Action("Index", "Games")">
+                                    <img src="~/Image/halftone-yellow.png" alt="" />
+                                    <figcaption>
+                                        <h2>Games</h2>
+                                    </figcaption>
+                                </a>
+                            </figure>
+                        </div>
+                    </div>
+                    @foreach (var item in Model)
+                    {
+                        <div class="col-md-4 gallery-grid">
+                            <div class="grid">
+                                <figure class="effect-roxy">
+                                    <a class="image-link" href="@Url.Action("Index", "Places",new {i= item.Name })">
+                                        <img src="~/Image/halftone-yellow.png" alt="" />
+                                        <figcaption>
+                                            <h2>@Html.DisplayFor(modelItem => item.Name)</h2>
+                                        </figcaption>
+                                    </a>
+                                </figure>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </section>
+    <script src="~/Scripts/lightbox-plus-jquery.min.js"></script>
+    <script src="~/Scripts/SmoothScroll.min.js"></script>
+</body>
+</html>
+

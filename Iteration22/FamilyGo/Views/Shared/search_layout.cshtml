@@ -1,0 +1,114 @@
+﻿
+@{
+    /**/
+
+    ViewBag.Title = "search_layout";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="leftside" style="margin-top:150px;">
+    <div class="about-heading" style="border:solid;border-radius: 25px; border-color:#66cdaa;padding:0.6em">
+        <div>
+            <h4>WANT CHANGE?</h4>
+        </div>
+        <div style="padding-top:1em">
+            <h6> Children Age Group</h6>
+        </div>
+       
+        <div style="padding-top:0.2em">
+            <input type="checkbox" name="age" value="6" />3-6 years old<br />
+            <input type="checkbox" name="age" value="7" />7-12 years old<br />
+        </div>
+        <div style="padding-top:1em">
+            <h6>Change Activities</h6>
+            <div style="padding-top:0.2em">
+                <select id="Select1" style="width:150px;"></select>
+                <div style="padding-left:25%">
+                    <input type="button" value="Search" id="searchButton" onclick="search()">
+                </div>
+            </div>
+            
+            
+            
+
+        </div>
+        
+    </div>
+</div>
+<div class="container body-content">
+    @RenderBody()
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('input[type=checkbox][name=age]').change(function () {
+            if (this.value == '0') {
+                test()
+            }
+            else if (this.value == '1') {
+                test();
+            }
+            else {
+                test();
+            };
+        });
+    });
+
+    function test() {
+        var checked1 = false;
+        var checked2 = false;
+        var obj = document.getElementsByName("age");
+            if (obj[0].checked) {
+                checked1 = true;
+        }
+        if (obj[1].checked) {
+            checked2 = true;
+        }
+        var childRet = document.getElementById("Select1");
+        for (var i = childRet.childNodes.length - 1; i >= 0; i--) {
+            childRet.removeChild(childRet.childNodes.item(i));
+        }
+        var activities = '@ViewBag.activities';
+        var tmpRet = {
+            "DATA1": { "Park": "Park", "Animal": "Animal", "Adventure Park and Theme Park": "Adventure Park and Theme Park","Others":"Others","Garden":"Garden","X":"X"},
+            "DATA2": { "Games": "Games", "Park": "Park", "Animal": "Animal", "Adventure Park and Theme Park": "Adventure Park and Theme Park", "Others": "Others", "Garden": "Garden", "X": "X"},
+            "DATA3": { "Australian Rules Football": "Australian Rules Football", "Badminton": "Badminton", "Baseball": "Baseball", "Basketball": "Basketball", "Cricket": "Cricket", "Cycling": "Cycling", "Dancing": "Dancing", "Netball": "Netball", "Skating": "Skating", "Soccer": "Soccer", "Swimming": "Swimming", "Table Tennis": "Table Tennis", "Tennis":"Tennis","Park": "Park", "Animal": "Animal", "Adventure Park and Theme Park": "Adventure Park and Theme Park", "Others": "Others", "Garden": "Garden", "X": "X"}
+        };
+        var ret = document.createDocumentFragment();
+        var tmpObj;
+        if (checked1 && !checked2) { tmpObj = tmpRet["DATA2"] }
+        else if (!checked1 && checked2) { tmpObj = tmpRet["DATA3"] }
+        else { tmpObj = tmpRet["DATA1"] }
+        for (var key in tmpObj) {
+            if (key != "X") {
+                var newop = document.createElement("option");
+                newop.id = key;
+                newop.value = key;
+                newop.appendChild(document.createTextNode(tmpObj[key]));
+                ret.appendChild(newop);
+            }
+        }
+        document.getElementById("Select1").appendChild(ret);
+    }
+
+    function search() {
+        if (document.getElementById("Select1").value == 'Games') { location.href = '/Games/Index'; }
+        else if (document.getElementById("Select1").value == '') {
+            alert("select an activities")
+        }
+        else { location.href = '/Places/Index?i=' + document.getElementById("Select1").value; }
+    }
+</script>
+
+@section Scripts{
+    @Scripts.Render("~/Scripts/DataTables/jquery.dataTables.js")
+    @Scripts.Render("~/Scripts/DataTables/dataTables.bootstrap.js")
+
+    <script>
+        $(document).ready(function () {
+            $('.table').DataTable(
+                //{ "bInfo": false, "bPaginate": false }
+            );
+        });
+    </script>
+}

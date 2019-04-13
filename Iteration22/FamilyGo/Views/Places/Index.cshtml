@@ -1,0 +1,281 @@
+﻿@model IEnumerable<FamilyGo.Models.Place>
+@Scripts.Render("~/bundles/jquery")
+
+@{
+    /**/
+
+    ViewBag.Title = "Index";
+
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    Layout = "~/Views/Shared/search_layout.cshtml";
+}
+
+<div class="about-heading">
+    <h2>Place you can go</h2>
+</div>
+
+<div class=" about-heading">
+    <h5>
+        <a href="@Url.Action("Index","Home")">Home >> &nbsp;</a>
+        <a href="@Url.Action("Index","Activities")">Activities >> </a>
+        <a href="@Url.Action("Index","Places",new { i = ViewBag.activityName})">Places you can go</a>
+    </h5>
+</div>
+
+<!--
+<div id="leftside">
+    <div class="about-heading">
+        <h5> Children Age Group</h5>
+        <div>
+            <input type="radio" name="age" value="0" /> All<br />
+            <input type="radio" name="age" value="1" /> 3-6 years old<br />
+            <input type="radio" name="age" value="2" /> 7-12 years old
+        </div>
+        <h5>Change Activities</h5>
+        <select id="Select1">
+            <option value="camping">Camping</option>
+            <option>Park</option>
+            <option>Game</option>
+
+        </select>
+
+    </div>
+
+</div>
+-->
+<div class="mapanddata"s style="display:grid">
+    <div id="map" style="height:425px"></div> <br />
+
+    <div>
+        <table class="table tableforgame" border="1">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Address)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Suburb)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Facility)
+                    </th>
+                    <th style="display:none">
+                        @Html.DisplayNameFor(model => model.Lat)
+                    </th>
+                    <th style="display:none">
+                        @Html.DisplayNameFor(model => model.Lon)
+                    </th>
+
+                    <th style="display:none">
+                        @Html.DisplayNameFor(model => model.Activity.Name)
+                    </th>
+                    <th> WANT MORE?</th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Address)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Suburb)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Facility)
+                </td>
+                <td style="display:none">
+                    @Html.DisplayFor(modelItem => item.Lat)
+                </td>
+                <td style="display:none">
+                    @Html.DisplayFor(modelItem => item.Lon)
+                </td>
+
+                <td style="display:none">
+                    @Html.DisplayFor(modelItem => item.Activity.Name)
+                </td>
+                <td>
+                    
+                    @Html.ActionLink("More Details", "Details", new { id = item.PlaceId })
+                </td>
+            </tr>
+            }
+        </table>
+
+
+
+
+
+
+
+        <table style="display:none">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Name)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Address)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Facility)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Lat)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Lon)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Suburb)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Activity.Name)
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            @foreach (var item in Model)
+            {
+                <tr class="coordinates" style="display:none;">
+                    <td class="name">
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Address)
+                    </td>
+                    <td class="description">
+                        @Html.DisplayFor(modelItem => item.Facility)
+                    </td>
+                    <td class="latitude">
+                        @Html.DisplayFor(modelItem => item.Lat)
+                    </td>
+                    <td class="longitude">
+                        @Html.DisplayFor(modelItem => item.Lon)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Suburb)
+                    </td>
+                    <td class="ActivityName">
+                        @Html.DisplayFor(modelItem => item.Activity.Name)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { id = item.PlaceId }) |
+                        @Html.ActionLink("Details", "Details", new { id = item.PlaceId }) |
+                        @Html.ActionLink("Delete", "Delete", new { id = item.PlaceId })
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+<script>
+    var map;
+    var locations = [];
+    var InforObj = [];
+    var dis = 0.05;
+
+    function initMap() {
+        map = new google.maps.Map(document.getElementById('map'), {
+            center: { lat: -37.835163, lng: 144.979678 },
+            zoom: 8
+        });
+        navigator.geolocation.getCurrentPosition(c);
+    }
+
+    function c(pos) {
+        var clat = parseFloat(pos.coords.latitude);
+        var clon = parseFloat(pos.coords.longitude);
+        $(".coordinates").each(function () {
+            var name = $(".name", this).text().trim();
+            var longitude = $(".longitude", this).text().trim();
+            var latitude = $(".latitude", this).text().trim();
+            var description = $(".description", this).text().trim();
+            var activityName = $(".ActivityName", this).text().trim();
+            // Create a point data structure to hold the values.
+            console.log(name);
+            var point = {
+                "name": name,
+                "latitude": parseFloat(latitude),
+                "longitude": parseFloat(longitude),
+                "description": description
+            };
+            if (activityName == "Dancing" || activityName == "Animal" || activityName == "Adventure Park and Theme Park" || activityName == "Others" || activityName == "Garden") { locations.push(point); }
+            else {
+                if (point.latitude < (clat + dis)&& point.latitude > (clat - dis)&& point.longitude < (clon + dis) && point.longitude > (clon - dis)){ locations.push(point); }
+            }
+            //locations.push(point);
+            // Push them all into an array.
+            //alert(locations);
+        });
+        var image = {
+            url: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png',
+            // This marker is 20 pixels wide by 32 pixels high.
+            size: new google.maps.Size(100, 50),
+            // The origin for this image is (0, 0).
+            origin: new google.maps.Point(0, 0),
+            // The anchor for this image is the base of the flagpole at (0, 32).
+            anchor: new google.maps.Point(0, 32)
+        };
+        var marker = new google.maps.Marker({
+            position: { lat: clat, lng: clon },
+            map: map,
+            title: 'Your current location',
+            icon: image
+        });
+        addMarkerInfo();
+    }
+
+
+
+
+    function addMarkerInfo() {
+        for (var i = 0; i < locations.length; i++) {
+            var contentString = '<div id="content">' + '<h4>' + locations[i].name + '</h4></br>' + locations[i].description +
+                '</div>';
+            const marker = new google.maps.Marker({
+                position: { lat: locations[i].latitude, lng: locations[i].longitude },
+                map: map
+            });
+
+            const infowindow = new google.maps.InfoWindow({
+                content: contentString,
+                maxWidth: 200
+            });
+            marker.addListener('click', function () {
+                closeOtherInfo();
+                infowindow.open(marker.get('map'), marker);
+                InforObj[0] = infowindow;
+            });
+        }
+        locations = [];
+    }
+    function closeOtherInfo() {
+        if (InforObj.length > 0) {
+            InforObj[0].set("marker", null);
+            InforObj[0].close();
+            InforObj.length = 0;
+        }
+    }
+
+
+
+
+
+
+
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDJeTABC7AwjSI-x7dm2cVlbHvA3yN65HA&callback=initMap" async defer></script>
+
+
+
+
